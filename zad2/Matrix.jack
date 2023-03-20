@@ -1,0 +1,141 @@
+class Matrix
+{   
+    field Array M;
+    field int n;
+
+    
+    constructor Matrix new(int m){
+        var int i,j;
+        let i = 0;
+        let n = m;
+        let M = Array.new(n*n);
+
+        while (i<n){
+            let j = 0;
+            while(j<m){
+                let M[i*n+j] = 0;
+                let j = j+1;
+
+            }
+            let i = i + 1;
+        }
+
+        return this;
+        
+    } 
+
+    // M[ i ][ j ] = array[ i*n + j ]
+
+    method int getElem(int a, int b){
+        return M[a*n+b];
+    }
+    
+    method void setElem(int a, int b, int value){
+        let M[a*n+b] = value;
+        return;
+    }
+
+    method Matrix add(Matrix A){
+        var int i,j;
+        var Matrix B;
+        let B = Matrix.new(n);
+
+        let i = 0;
+ 
+        while (i<n){
+            let j = 0;
+
+            while(j<n){
+                do B.setElem(i,j , A.getElem(i,j) + M[i*n+j]);
+
+                let j = j+1;
+            }
+            let i = i+1;
+        }
+        return B;
+    }
+
+    method int multScalar(int s){
+        var int i,j,rj;
+        var Matrix B;
+        let B = Matrix.new(n);
+        let i = 0;
+
+
+        while (i<n){
+            let j = 0;
+
+            while(j<n){
+                do B.setElem(i,j, M[i*n+j]*s);
+                let j = j+1;
+            }
+            let i = i+1;
+        }
+        return B;
+    }
+
+    method Matrix multMat(Matrix A){
+        var int i,j,k,t1,t2;
+        var Matrix B;
+        let B = Matrix.new(n);
+        let i = 0;
+
+        while (i < n){
+            let j = 0;
+            while(j < n){
+                let k = 0;
+                while (k < n){
+
+                    let t1 = B.getElem(i,j);
+                    let t2 = M[i*n+k]*A.getElem(k,j);
+
+                    do B.setElem(i,j, t1 + t2);
+                    let k = k+1;
+                }
+
+                let j = j+1;
+            }
+            let i = i+1;
+        }
+        return B;
+    }
+
+    method int frobenius(){
+        var int sum,i,j;
+        let i = 0;
+        let sum = 0;
+
+        while (i<n){
+            let j = 0;
+
+            while(j<n){
+                let sum = sum + (M[i*n+j]*M[i*n+j]);
+                let j = j+1;
+            }
+            let i = i+1;
+        }
+
+        return Math.sqrt(sum);
+    }
+
+    function Matrix eye(int n){
+        var int i,j;
+        var Matrix A;
+        let A = Matrix.new(n);
+        let i = 0;
+
+        while(i<n){
+            let j = 0;
+
+            while(j<n){
+                if(i=j){
+                    do A.setElem(i,j,1);
+               } 
+               let j = j+1;
+            }
+            let i = i+1;
+        }
+        return A;
+    }
+
+}
