@@ -1,0 +1,26 @@
+class Main
+{
+    function void main(){
+        var String a,b,c;
+        
+        let a = "fh";
+        let b = "hejfbhsdbfhbsdbaindfidnoficndvobuiefisbdjabe";
+        let c ="aafcgvnhjkmdasbfdhbsbfvhudzfhzuehzfbsdbhzaszdhbujgkrfj";
+        do Memory.alloc(3000);
+
+        do Memory.poke(14000,3);
+        //do Output.printInt(Memory.peek(14000));
+
+        //do Memory.alloc(10);
+
+        do Memory.deAlloc(b);
+
+        
+
+        //do Memory.sortFreeList();
+
+        return;
+    }
+
+
+}

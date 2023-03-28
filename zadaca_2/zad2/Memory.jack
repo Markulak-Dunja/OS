@@ -1,0 +1,170 @@
+/**
+ * Memory operations library.
+ */ 
+class Memory
+{
+    static Array ram;
+    static Array freeList;
+    
+    /** Initializes memory parameters. */
+    function void init()
+    {
+        let ram = 0;
+        
+        // set heap and free list to 2048 (heap top)
+        let freeList = 2048;
+        
+        // initial values
+        let freeList[0] = 0;     // no next block at start
+        let freeList[1] = 14335; // initial block length, 16384 - 2048 - 1
+        
+        return;
+    }
+
+    /** Returns the value of the main memory at the given address. */
+    function int peek(int address)
+    {
+        return ram[address];
+    }
+
+    /** Sets the value of the main memory at this address
+     *  to the given value. */
+    function void poke(int address, int value)
+    {
+        let ram[address] = value;
+        return;
+    }
+
+    /** finds and allocates from the heap a memory block of the 
+     *  specified size and returns a reference to its base address. */
+    function int alloc(int size)
+    {
+        var int curr, next, len, new;
+        let curr = freeList;
+        
+        // iterate through all blocks
+        while (~(curr = 0))
+        {
+            let next = ram[curr];
+            let len = ram[curr + 1];
+            
+            // check if current block is large enough
+            if (~(len < (size + 2))) // len >= size + 2
+            {
+                // the block is large enough, use it (first fit) 
+                
+                let ram[curr + 1] = len - size - 2;
+                
+                let new = curr + len - size;
+                let ram[new] = 0;
+                let ram[new + 1] = size;
+                
+                // return first element
+                return new + 2;
+            }            
+            
+            let curr = next;
+        }
+        //ako nije napravljen return unutar if-a
+        do Memory.defrag();
+        return freeList;
+    }
+
+    /** De-allocates the given object and frees its space. */
+    function void deAlloc(int b)
+    {
+        var int curr,next,len;
+        let curr = freeList;
+
+        while(~(curr = 0)){
+            let next = ram[curr];
+            if (next = 0){
+    			let ram[curr] = b;
+                //pretpotstavimo da obj pokazuje na 0 kao nacrtano u prezentaciji ako ne:
+                // let ram[b] = 0;
+                return;
+            }
+            let curr = next;
+		}
+
+
+        return;
+    }    
+
+    function void memcpy(int izvor, int odred, int d){
+        var int i;
+        var Array new;
+        let i = 0;
+
+        while (i<d){
+            let new[i] = ram[izvor+i];
+            let i = i+1;
+        }
+        let i = 0;
+        while (i<d){
+            do Memory.poke(odred+i,new[i]);
+        }
+
+        return;
+    }
+
+
+    function void defrag(){
+        var int next,curr,i;
+        let freeList = Memory.sortFreeList();
+        //et i =0;
+        let curr = freeList;
+        while (~(curr = 0)){
+            let next = ram[curr];
+
+            if (curr + ram[curr+1] + 1 = next){
+                let ram[curr] = ram[next];
+                let ram[curr+1] = ram[curr+1] + ram[next+1] +2;
+            }
+        }
+
+        return;
+    }
+
+
+    function int ListSize(){
+        var int i, curr,next;
+        let i = 0;
+        let curr = freeList;
+
+        while(~(curr = 0)){
+            let next = ram[curr];
+            let i = i+1;
+        }
+        return i;
+            
+    }
+    
+    function int sortFreeList(){
+        var int curr, next1,next2, temp, size,listSize, i,j;
+        let curr = freeList;
+        let listSize = Memory.ListSize();
+        let i =0;
+        let j = 0;
+
+        // iterate through all blocks
+        while (i < listSize)
+        {   
+            while (j<listSize){
+                let next1 = ram[curr];
+
+                if (curr< next1){
+                    let temp = curr;
+                    let ram[curr] = next1;
+                    let ram[next1] = temp;
+                }
+            }
+
+            let next2 = ram[curr];
+
+            let curr = next2;
+            
+        }
+        return ram[0];
+    }
+}

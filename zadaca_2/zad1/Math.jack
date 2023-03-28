@@ -1,0 +1,181 @@
+/**
+ * A basic math library.
+ */
+class Math
+{
+    static Array twoToThe;
+
+    /** Initializes the library. */
+    function void init()
+    {
+        var int i, pow;
+        let twoToThe = Array.new(16);
+        
+        let pow = 1;
+        while (i < 16)
+        {
+            let twoToThe[i] = pow;
+            let pow = pow + pow;
+            let i = i + 1;
+        } 
+        return;
+    }
+
+    /** Returns the absolute value of x. */
+    function int abs(int x)
+    {
+        if (x < 0)
+        {
+            return -x;
+        }
+        return x;
+    }
+
+    /** Returns the product of x and y. */
+    function int multiply(int x, int y)
+    {
+        var int sum, shifted, i;
+        let shifted = x;
+        
+        while (i < 16)
+        {
+            if (twoToThe[i] & y)
+            {
+                let sum = sum + shifted;
+            }
+            let shifted = shifted + shifted;
+            let i = i + 1;
+        }
+        
+        return sum;
+    }
+
+    /** Returns the integer part of x/y. */
+    function int divide1(int x, int y)
+    {   var int q;
+        if (y > x){
+            return 0;
+        }
+        
+        let q = Math.divide1(x, 2*y);
+        if ( (x- ((2*q) * y)) < y)
+        {
+            return 2*q;
+        }
+        else
+        {
+            return (2*q) + 1;
+        }
+       
+    }
+
+    function int divide(int x, int y){
+        var int x1,y1,rj,predznak;
+        let x1 = x;
+        let y1 = y;
+        let predznak= 1;
+        if ( ((x < 0) & (y > 0)) | ((x > 0) & (y < 0)) ){
+            let x1 = Math.abs(x);
+            let y1 = Math.abs(y);
+            let predznak = -1;
+        }
+        let rj = Math.divide1(x1,y1) * predznak;
+        return rj;
+    }
+    
+
+    /** Returns the integer part of the square root of x. */
+    function int sqrt(int x)
+    {
+        var int i, y, pow;
+        
+        if (x < 0)
+        {
+            return 0;
+        }
+        
+        let i = 7;
+        while (i > -1)
+        {
+            let pow = Math.multiply(y + twoToThe[i], y + twoToThe[i]);
+            if (pow < x)
+            {
+                let y = y + twoToThe[i];
+            }
+            let i = i - 1;
+        }
+        
+        return y;
+    }
+
+    /** Returns the greater number. */
+    function int max(int x, int y)
+    {
+        if (x > y)
+        {
+            return x;
+        }
+        return y;
+    }
+
+    /** Returns the smaller number. */
+    function int min(int x, int y)
+    {
+        if (x < y)
+        {
+            return x;
+        }
+        return y;
+    }
+
+    function int search(int x){
+        var int i;
+        let i = 0;
+
+        while(i < 16){
+
+            if (x = twoToThe[i]){
+                return i;
+            }
+            let i = i+1;
+
+        }
+        return -1;
+
+    }
+    function int log(int x){
+        var int rj, i, temp;
+        let i = 0;
+        let temp = Math.search(x);
+
+        if(~(temp=-1)){
+            return temp;
+        }
+        else{
+            return Math.log(x-1);
+        }
+     }
+
+
+
+    function int pow(int a, int b){
+        var int l,r,c,i;
+        let l = 1;
+        let c = a;
+
+        while(~(b=0)){
+            let r = b-((b/2)*2);
+
+            if (r=1){
+                let l = l*c;
+            }
+            let b = b/2;
+            let c = c*c;
+        }
+        return l;
+
+
+    }
+
+
+}

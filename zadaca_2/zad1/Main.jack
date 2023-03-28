@@ -1,0 +1,18 @@
+class Main{
+
+    function void main(){
+        var int a,b;
+        let a = 20;
+        let b = -2;
+        do Output.printInt(Math.multiply(a,b));
+        do Output.println();
+
+
+        do Output.printInt(Math.divide(a,b));
+        do Output.println();
+
+        do Output.printInt(Math.log(9));
+
+        return;
+    }
+}
