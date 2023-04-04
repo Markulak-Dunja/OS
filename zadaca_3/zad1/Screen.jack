@@ -1,0 +1,165 @@
+/**
+ * A library of functions for displaying graphics on the screen.
+ * The Hack physical screen consists of 256 rows (indexed 0..255, top to bottom)
+ * of 512 pixels each (indexed 0..511, left to right). The top left pixel on 
+ * the screen is indexed (0,0).
+ */
+class Screen
+{
+    static boolean currentColor;
+    static Array screen;
+    
+    /** Initializes the Screen. */
+    function void init()
+    {
+        let currentColor = true;
+        let screen = 16384;
+        return;
+    }
+
+    /** Erases the entire screen. */
+    function void clearScreen()
+    {
+        var int i;
+        while (i < 8192)
+        {
+            do Memory.poke(16384 + i, 0);
+            let i = i + 1;
+        }
+        return;
+    }
+
+    /** Sets the current color, to be used for all subsequent drawXXX commands.
+     *  Black is represented by true, white by false. */
+    function void setColor(boolean b)
+    {
+        let currentColor = b;
+        return;
+    }
+
+    /** Draws the (x,y) pixel, using the current color. */
+    function void drawPixel(int x, int y)
+    {
+        var int address, value, pos, pow, i;
+        
+        let address = (32 * y) + (x / 16);        
+        let value = screen[address];
+        
+        // Set (x % 16)-th bit of value to the current color
+        let pos = x - (x / 16 * 16); // x % 16
+        
+        // calculate 2^pos
+        let pow = 1;
+        while (i < pos)
+        {
+            let pow = pow * 2;
+            let i = i + 1;
+        }
+        
+        // color the (pos) bit
+        if (currentColor)
+        {
+            let value = value | pow;
+        }
+        else
+        {
+            let value = value & ~pow;
+        }
+        
+        let screen[address] = value;
+        
+        return;
+    }
+
+    /** Draws a line from pixel (x1,y1) to pixel (x2,y2), using the current color. */
+    function void drawLine(int x1, int y1, int x2, int y2)
+    {
+        var int a, b, diff, dx, dy, tmp;
+        var boolean invertX, invertY;
+               
+        let dx = Math.abs(x2 - x1);
+        let dy = Math.abs(y2 - y1);
+        
+        // dirty fix for horizontal lines
+        if (dy = 0)
+        {
+            let b = Math.min(x1, x2);
+            while (a < dx)
+            {
+                do Screen.drawPixel(b + a, y1);
+                let a = a + 1;
+            }
+            return;
+        }
+        
+        let invertX = x2 < x1;
+        let invertY = y2 < y1;
+         
+        while (~(Math.abs(a) > dx) & ~(Math.abs(b) > dy))
+        {
+            do Screen.drawPixel(x1 + a, y1 + b);
+            if (diff < 0)
+            {
+                if (invertX)
+                {
+                    let a = a - 1;
+                }
+                else
+                {
+                    let a = a + 1;
+                }
+                let diff = diff + dy;
+            }
+            else
+            {
+                if (invertY)
+                {
+                    let b = b - 1;
+                }
+                else
+                {
+                    let b = b + 1;
+                }
+                let diff = diff - dx;
+            }
+        }
+        
+        return;
+    }
+
+    /** Draws a filled rectangle whose top left corner is (x1, y1)
+     * and bottom right corner is (x2,y2), using the current color. */
+    function void drawRectangle(int x1, int y1, int x2, int y2)
+    {
+        while (~(x1 > x2))
+        {
+            do Screen.drawLine(x1, y1, x1, y2);
+            let x1 = x1 + 1;
+        }
+        return;
+    }
+
+    /** Draws a filled circle of radius r<=181 around (x,y), using the current color. */
+    function void drawCircle(int x, int y, int r){
+        var int dy, s, x1, x2, y1;
+            
+        let dy = -r;
+
+        while (~(dy = r)) {
+          let s = Math.sqrt((r * r) - (dy * dy));
+    
+          let x1 = x - s;
+          let x2 = x + s;
+    
+          let y1 = y + dy;
+    
+          do Screen.drawLine(x1, y1, x2, y1);
+    
+          let dy = dy + 1;
+        }
+    
+        return;
+        
+     
+    }
+}

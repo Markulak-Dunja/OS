@@ -1,0 +1,13 @@
+class Main {
+    function void main() {
+        do Output.printString("Lorem");
+        do Output.printString(" Ipsum");
+        do Output.backSpace();
+        do Output.backSpace();
+        do Output.backSpace();
+        do Output.backSpace();
+        do Output.printString("Lorem");
+
+        return;
+    }
+}

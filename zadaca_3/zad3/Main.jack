@@ -1,0 +1,76 @@
+class Main{
+
+    function void main(){
+        do Main.tetris(256,20,0);
+        
+        return;
+    }
+
+    function void drawL(int x, int y,int k){
+
+        do Screen.clearScreen();
+        do Screen.drawRectangle(x, y, x+15, y+15);
+        
+        if (k & 1 = 0) {
+            //uspravno
+            do Screen.drawRectangle(x, y-10, x+15, y);
+            do Screen.drawRectangle(x, y+14, x+15, y+30);
+            if (k & 2 = 0) {
+                do Screen.drawRectangle(x+15, y+15, x+30, y+30);
+            } else {
+                do Screen.drawRectangle(x-15, y-10, x, y+2);
+            }
+        } else {
+            do Screen.drawRectangle(x-15, y, x, y+15);
+            do Screen.drawRectangle(x+15, y, x+30, y+15);
+            if (k & 2 = 0) {
+                do Screen.drawRectangle(x-15, y+15, x, y+30);
+            } else {
+                do Screen.drawRectangle(x+15, y-15, x+30, y);
+            }
+        }
+        
+        return;
+        
+    }
+    function void tetris(int x, int y, int k) {
+        do Main.drawL(x,y,k);
+        //esc 140; desno 132; lijevo 130; gore 131; dolje 133; R 82; r 114
+        while (~(Keyboard.keyPressed() = 140)) {
+            if ((Keyboard.keyPressed() = 132)) {
+                let x = x + 16; // desno
+                do Main.drawL(x,y,k);
+                do Sys.wait(100);
+            }
+            if ((Keyboard.keyPressed() = 130)) {
+                let x = x - 16; // lijevo
+                do Main.drawL(x,y,k);
+                do Sys.wait(100);
+            }
+
+            if ((Keyboard.keyPressed() = 131)) {
+                // gore
+                let y = y - 16;
+                do Main.drawL(x,y,k);
+                do Sys.wait(100);
+            }
+            if ((Keyboard.keyPressed() = 133)) {
+                // dolje
+                let y = y + 16;
+                do Main.drawL(x,y,k);
+                do Sys.wait(100);
+            }
+            if ((Keyboard.keyPressed() = 82) | (Keyboard.keyPressed() = 114)) {
+                // rotacija na veliko R
+                let k = (k + 1) & 3;
+                do Main.drawL(x,y,k);
+                do Sys.wait(100);
+            }
+        }
+        
+        do Screen.clearScreen();
+        do Sys.wait(1000);
+        
+        return;
+    }
+}
